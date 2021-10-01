@@ -4,6 +4,7 @@ import { addFriend } from '../redux/actions';
 
 const AddFriend = () => {
     const [name,setName] = useState("");
+    const [showError,setShowError] = useState(false);
     const dispatch = useDispatch();
     const inputStyle = {
         width: "100%",
@@ -19,9 +20,15 @@ const AddFriend = () => {
     }
 
     const handleSubmit = (e) => {
-        let payloadObj = {id:generateKey(name),name: name, fav: false}
-        dispatch(addFriend(payloadObj)); 
-        setName("");
+        setShowError(false);
+        if(name == '') {
+            setShowError(true);
+            return;
+        } else {
+            let payloadObj = {id:generateKey(name),name: name, fav: false}
+            dispatch(addFriend(payloadObj)); 
+            setName("");
+        }        
     }
 
     const handleChange = (e) => {
@@ -30,6 +37,7 @@ const AddFriend = () => {
     return (
         <form onSubmit={e => {e.preventDefault(); handleSubmit(e);}}>
             <input style={inputStyle} type="text" value={name} placeholder="Enter your friend's name..." onChange={(e) => handleChange(e)}/>
+            {showError && <span style={{color:"red"}}>Please enter a name !!</span>}
         </form>
     )
 }
